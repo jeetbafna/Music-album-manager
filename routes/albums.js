@@ -7,7 +7,29 @@ var upload = multer({dest:'./public/images/uploads'});
 
 //Home page
 router.get('/', function(req, res, next){
-	res.render('albums/index');
+	var albumRef = fbRef.child('albums');
+
+	albumRef.once('value', function(snapshot){
+		var albums = [];
+		snapshot.forEach(function(childSnapshot){
+			var key = childSnapshot.key();
+			var childData = childSnapshot.val();
+			albums.push({
+				id: key,
+				artist: childData.artist,
+				title: childData.title,
+				genre: childData.genre,
+				info: childData.info,
+				label: childData.label,
+				tracks: childData.tracks,
+				year: childData.year,
+				cover: childData.cover
+
+			});
+		});
+		res.render('albums/index', {albums: albums});
+	});
+
 });
 
 router.get('/add', function(req, res, next){
