@@ -150,6 +150,16 @@ router.post('/edit/:id', upload.single('cover'), function(req, res, next){
 	res.redirect('/albums');
 });
 
+router.delete('/delete/:id', function(req, res, next){
+	var id = req.params.id;
+	var albumRef = new Firebase('https://albumz-f5975.firebaseio.com/albums/'+id);
+
+	albumRef.remove();
+
+	req.flash('success_msg', 'Album Deleted')
+	res.send(200);
+});
+
 
 
 module.exports = router;
