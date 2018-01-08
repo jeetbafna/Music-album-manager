@@ -37,6 +37,26 @@ router.post('/add', function(req, res, next){
 	res.redirect('/genres');
 });
 
+router.get('/edit/:id', function(req, res, next){
+	var id = req.params.id;
+	var genreRef = new Firebase('https://albumz-f5975.firebaseio.com/genres/'+id);
+
+	genreRef.once('value', function(snapshot){
+		var genre = snapshot.val();
+		res.render('genres/edit', {genre: genre, id:id});
+	});
+});
+
+router.post('/edit/:id', function(req, res, next){
+	var id = req.params.id;
+	var name = req.body.name;
+	var genreRef = new Firebase('https://albumz-f5975.firebaseio.com/genres/'+id);
+
+	genreRef.update({
+		name: name
+	});
+	res.redirect('/genres');
+});
 
 
 module.exports = router;
